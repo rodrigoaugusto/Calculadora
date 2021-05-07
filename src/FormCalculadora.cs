@@ -48,13 +48,15 @@ namespace Calculadora
         private void Calcular(Boolean comIgual = false)
         {
             double valorAtual = Double.Parse(txtResultado.Text);
-            this.txtResultado.Text = this.calculadora.Calcular(valorAtual, comIgual).ToString();
+            this.txtResultado.Text = this.calculadora.Calcular(valorAtual).ToString();
             this.txtHistorico.Text = this.calculadora.GetHistorico();
         }
 
         private void btnIgual_Click(object sender, EventArgs e)
         {
-            this.Calcular(true);
+            this.calculadora.SetOperacao(Calculadora.IGUAL);
+            this.Calcular();
+            this.fezOperacaoNaUltimaAcao = true;
         }
 
         private void btnSomar_Click(object sender, EventArgs e)

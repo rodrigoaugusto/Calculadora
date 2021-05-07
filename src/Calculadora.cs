@@ -7,17 +7,20 @@ namespace Calculadora
     public class Calculadora
     {
 
-        
+
         private double novoValor;
         private String historico;
         private String operacao;
         private double resultado;
+
         private double ultimoResultado;
+        private String ultimaOperacao;
 
         public static readonly string SOMA = "+";
         public static readonly string SUBTRACAO = "-";
         public static readonly string MULTIPLICACAO = "*";
         public static readonly string DIVISAO = "/";
+        public static readonly string IGUAL = "=";
 
         public Calculadora()
         {
@@ -31,42 +34,46 @@ namespace Calculadora
 
         public void SetOperacao(String operacao)
         {
+            this.ultimaOperacao = this.operacao;
             this.operacao = operacao;
         }
 
-        public double Calcular(double valorAtual, Boolean comIgual= false)
+        public double Calcular(double valorAtual)
         {
-
+            this.ultimoResultado = this.resultado;
             this.novoValor = valorAtual;
 
-            if (resultado > 0)
+            if (resultado > 0 && !this.ultimaOperacao.Equals(IGUAL))
             {
+                String operacao = this.operacao.Equals(IGUAL) ? this.ultimaOperacao : this.operacao;
 
-                this.ultimoResultado = resultado;
-
-                if (this.operacao == SOMA)
+                if (operacao == SOMA)
                 {
                     this.resultado = this.Somar(this.novoValor);
                 }
-                else if (this.operacao == SUBTRACAO)
+                else if (operacao == SUBTRACAO)
                 {
                     this.resultado = this.Subtrair(this.novoValor);
                 }
-                else if (this.operacao == MULTIPLICACAO)
+                else if (operacao == MULTIPLICACAO)
                 {
                     this.resultado = this.Multiplicar(this.novoValor);
                 }
-                else if (this.operacao == DIVISAO)
+                else if (operacao == DIVISAO)
                 {
                     this.resultado = this.Dividir(this.novoValor);
                 }
             }
             else
             {
-                this.resultado = this.novoValor;
+                if (!this.ultimaOperacao.Equals(IGUAL))
+                {
+                    this.resultado = this.novoValor;
+                }
+                    
             }
 
-            this.UpdateHistorico(comIgual);
+            this.UpdateHistorico();
 
             return this.resultado;
         }
@@ -78,7 +85,7 @@ namespace Calculadora
 
         private double Subtrair(double valor)
         {
-            return this.resultado += valor;
+            return this.resultado -= valor;
         }
 
         private double Dividir(double valor)
@@ -95,17 +102,17 @@ namespace Calculadora
             return this.resultado *= valor;
         }
 
-        private String UpdateHistorico(Boolean comIgual = false)
+        private String UpdateHistorico()
         {
-            if (comIgual)
+            if (!this.ultimaOperacao.Equals(IGUAL) && this.operacao.Equals(IGUAL))
             {
-                this.historico = this.ultimoResultado + " " + this.operacao + " " + novoValor + " = ";
+                this.historico = this.ultimoResultado + " " + this.ultimaOperacao + " " + novoValor + " = ";
             }
             else
             {
-                 this.historico = this.resultado + this.operacao;
+                this.historico = this.resultado + this.operacao;
             }
-           
+
             return this.historico;
         }
 
